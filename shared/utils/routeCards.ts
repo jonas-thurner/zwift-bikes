@@ -49,3 +49,19 @@ export function toRouteCard(route: RouteSummary): RouteCardData {
     shape: rideSilhouette(rideForListedRoute(route))
   }
 }
+
+/**
+ * The words for the two surfaces a route card flags, in lower case: the
+ * homepage's Surface filter ("Includes gravel"), the legend over its grid
+ * and the card text (#331) all read them here, so the three say one thing.
+ * The gravel flag is every loose surface and the cobbles flag brick and wood
+ * too, as the surface strip's two colours are.
+ */
+export const ROUTE_SURFACE_WORDS = { gravel: 'gravel', cobble: 'cobbles' } as const
+
+/** The surfaces a card names after its terrain (#331), capitalised as the terrain is, gravel first. */
+export function routeCardSurfaces(card: Pick<RouteCardData, 'gravel' | 'cobble'>): string[] {
+  return (['gravel', 'cobble'] as const)
+    .filter(surface => card[surface])
+    .map(surface => ROUTE_SURFACE_WORDS[surface].replace(/^./, letter => letter.toUpperCase()))
+}
